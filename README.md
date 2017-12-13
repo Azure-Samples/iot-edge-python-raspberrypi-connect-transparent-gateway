@@ -1,64 +1,85 @@
-# Project Name
+# IOT EDGE PYTHON RASPBERRYPI CONNET TRANSPARENT GATEWAY
 
-Raspberry Pi as leaf node connects to edge translate gateway.
+Real world Azure Edge Hub scenario with raspberry pi as leaf node connects to edge transparent gateway.
 
-## Getting Started
+## Step by Step Guidance
 
-### Prerequisites
+To accomplish this tutorial, user your computer or virtual machime or LattePanda(with Widnows Enterprise) as the Azure IoT Edge transparent gateway.
+Mac OS support is on the way.
 
-(ideally very short, if any)
+Use the Raspberry Pi 3 as leaf node. Prepare a temperature and humidity sensor if possible.
+Make sure that your gateway and leaf node correctly setup and connect to the same network.
 
-- OS
-- Library version
-- ...
+Follow the steps to setup your Raspbeery Pi as leaft node and your Edge Transparent Gateway.
 
-### Installation
+### Gateway
 
-(ideally very short)
+- Install and start [Docker](https://www.docker.com/)
+- Install [Python 2.7](https://www.python.org/downloads/) to make sure you could start the edge runtime
+- Install VSCode and its extension [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge)
 
-- npm install [package name]
-- mvn install
-- ...
+**Create an IoT Hub** and **Register an IoT Edge device** if you don't have one follow the first two parts in the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-simulate-device-windows).
 
-### Quickstart
-Pick a devbox or laptop or lattepanda as edge gateway, any device that could run docker, start edge runtime works 
-Make sure that your gateway and leaf node connect to the same network 
-Generate all necessary certs in gateway following this document https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway  
-Briefly in windows powershell:  
- 
+Generate all necessary certificates in gateway following this document https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway  
+
+If you has Windows 10 running in your gateway, commands could be summarized as:
+
+```
 git clone https://github.com/azure/azure-iot-sdk-c 
  
-cd azure-iot-sdk-c\tools\CACertificates 
- 
-powershell in admin mode: . ./ca-certs.ps1 
+cd azure-iot-sdk-c\tools\CACertificates
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+
+. ./ca-certs.ps1 
  
 Test-CACertsPrerequisites 
  
 New-CACertsCertChain 
  
-New-CACertsEdgeDevice myGateway 
- 
-Go to Azure portal Azure IoT Hub and navigate to Certificates. Add a new certificate, providing the root CA file when prompted (RootCA.pem  for powershell, ./certs/azure-iot-test-only.root.ca.cert.pem in Bash) 
- 
-Generate .crt from pem and install it to Raspberry Pi 
-commands: 
+New-CACertsEdgeDevice myGateway
+```
+
+Go to Azure portal Azure IoT Hub and navigate to Certificates.
+Add a new certificate, providing the root CA file when prompted (RootCA.pem  for powershell, ./certs/azure-iot-test-only.root.ca.cert.pem in Bash) 
+
+For the IoT Edge device, you could create the deployment and setup Edge for it with [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) extension:
+
+![Azure IoT Edge Extension](./images/deploy.png)
+
+Start the IoT Edge runtime in Vscode with F1 command:
+
+![Start Edge](./images/start.png)
+
+Check that you have two docker containers running: edgeAgent, edgeHub.
+
+### Raspberry Pi
+- Install [Raspbian] (https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-raspberry-pi-kit-python-get-started#set-up-raspberry-pi)
+- *Optional*: If you have the sensor in hand, wire them up following the link above, otherwise we could just simulate the data
+
+Plugin a real screen to you raspberry pi or just ssh it.
+
+Generate .crt from the PEM file you generated when step the gateway. Install it to Raspberry Pi, commands for reference:
+```
 openssl x509 -in RootCA.pem -inform PEM -out RootCA.crt 
  
 sudo cp RootCA.crt /use/local/share/ca-certificates/RootCA.crt 
  
 sudo update-ca-certificates 
+```
+
+Follow the steps to clone the python sample from https://github.com/azure-samples/iot-hub-python-raspberrypi-client-app 
+
+Follow the instructions to run setup.sh to get python sdk to work.
  
-Follow this document to setup you Raspberry PI 
-Follow the steps to git clone the python sample from https://github.com/azure-samples/iot-hub-python-raspberrypi-client-app 
-Follow the instructions to run setup.sh to get python sdk to work since python sdk has issues with RaspBian https://github.com/Azure/azure-iot-sdk-python/issues/81 
- 
-Run the app.py with connectionstring appended with GatewayHostName 
-e.g.  
-HostName=qisun-iothub.azure-devices.net;DeviceId=pi;SharedAccessKey=XXXXX;GatewayHostName=<gateway machine name> 
-Verify the gateway receives the messages with dockers log –f edgeHub 
-Verify messages goes to iothub 
- 
- 
+Run the app.py with device connectionstring appended with GatewayHostName, e.g.:
+```HostName=qisun-iothub.azure-devices.net;DeviceId=pi;SharedAccessKey=XXXXX;GatewayHostName=<gateway machine name>```
+
+Verify the gateway receives the messages with ```dockers log –f edgeHub```
+
+Verify messages goes to iothub with VSCode extension:
+
+![Verify messages come in iothub](./images/verify.png)
 
 ## Demo
 
@@ -71,11 +92,3 @@ To run the demo, follow these steps:
 1.
 2.
 3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
