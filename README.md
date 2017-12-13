@@ -89,7 +89,7 @@ You could see Raspberry Pi sending messages to Edge Gateway:
 
 Verify the gateway receives the messages with ```dockers log –f edgeHub```
 
-![edgehub logs](./images/hublogs.png)
+![edgehub logs](./images/edgehublogs.png)
 
 Verify messages goes to iothub with VSCode extension:
 
