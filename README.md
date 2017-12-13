@@ -47,9 +47,16 @@ For the IoT Edge device, you could create the deployment and setup Edge for it w
 
 ![Azure IoT Edge Extension](./images/deploy.png)
 
-Start the IoT Edge runtime in Vscode with F1 command:
-
-![Start Edge](./images/start.png)
+Start the IoT Edge runtime (Windows):
+```
+iotedgectl setup --connection-string {device connection string}
+     --edge-hostname {gateway hostname}
+     --device-ca-cert-file {full path}/certs/myGateway-public.pem
+     --device-ca-chain-cert-file {full path}/certs/myGateway-all.pem
+     --device-ca-private-key-file {full path}/private/myGateway-private.pem
+     --owner-ca-cert-file {full path}/RootCA.pem
+```
+If you are wokring on Linux gateway, you could find corresponding command in document when you [generated the certificates](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway).
 
 Check that you have two docker containers running: edgeAgent, edgeHub.
 
@@ -73,22 +80,18 @@ Follow the steps to clone the python sample from https://github.com/azure-sample
 Follow the instructions to run setup.sh to get python sdk to work.
  
 Run the app.py with device connectionstring appended with GatewayHostName, e.g.:
-```HostName=qisun-iothub.azure-devices.net;DeviceId=pi;SharedAccessKey=XXXXX;GatewayHostName=<gateway machine name>```
+
+```python app.py "HostName=qisun-iothub.azure-devices.net;DeviceId=pi;SharedAccessKey=XXXXX;GatewayHostName=<gateway host name>"```
+
+You could see Raspberry Pi sending messages to Edge Gateway:
+
+![pi logs](./images/pi.png)
 
 Verify the gateway receives the messages with ```dockers log –f edgeHub```
+
+![edgehub logs](./images/hublogs.png)
 
 Verify messages goes to iothub with VSCode extension:
 
 ![Verify messages come in iothub](./images/verify.png)
 
-## Demo
-
-A demo app is included to show how to use the project.
-
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
