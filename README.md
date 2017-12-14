@@ -18,9 +18,11 @@ Follow the steps to setup your Raspbeery Pi as leaft node and your Edge Transpar
 - Install [Python 2.7](https://www.python.org/downloads/) to make sure you could start the edge runtime
 - Install VSCode and its extension [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge)
 
-**Create an IoT Hub** and **Register an IoT Edge device** if you don't have one follow the first two parts in the [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-simulate-device-windows).
+Follow the first two parts in this [document](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-simulate-device-windows) to **Create an IoT Hub** and **Register two IoT Edge devices** if you don't have any.
 
-Generate all necessary certificates in gateway following this document https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway  
+Create an edge device for gateway and another edge device for raspberry pi, here I name the gateway panda.
+
+Generate all necessary certificates in gateway following this [guidance](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway).
 
 If you has Windows 10 running in your gateway, commands could be summarized as:
 
@@ -40,8 +42,7 @@ New-CACertsCertChain
 New-CACertsEdgeDevice myGateway
 ```
 
-Go to Azure portal Azure IoT Hub and navigate to Certificates.
-Add a new certificate, providing the root CA file when prompted (RootCA.pem  for powershell, ./certs/azure-iot-test-only.root.ca.cert.pem in Bash) 
+Go to Azure portal Azure IoT Hub and navigate to Certificates, add a new certificate, providing the root CA file when prompted (RootCA.pem  for powershell, ./certs/azure-iot-test-only.root.ca.cert.pem in Bash) 
 
 For the IoT Edge device, you could create the deployment and setup Edge for it with [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) extension:
 
@@ -94,4 +95,12 @@ Verify the gateway receives the messages with ```dockers log –f edgeHub```
 Verify messages goes to iothub with VSCode extension:
 
 ![Verify messages come in iothub](./images/verify.png)
+
+>Note
+
+If there is [ERR] Received message does not contain device id kind of error in edgeHub logs, comment those lins iot-hub-raspberry-pi-kit-python-get-started#set-up-raspberry-pi/app.py could solve it:
+
+![comment](./images/comment.png)
+
+
 
