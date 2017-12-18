@@ -98,7 +98,7 @@ Verify messages goes to iothub with VSCode extension:
 
 >Note
 
-If there is [ERR] Received message does not contain device id kind of error in edgeHub logs, comment those lins iot-hub-raspberry-pi-kit-python-get-started#set-up-raspberry-pi/app.py could solve it:
+If there is [ERR] Received message does not contain device id kind of error in edgeHub logs, comment those lines in iot-hub-raspberry-pi-kit-python-get-started#set-up-raspberry-pi/app.py could solve it:
 
 ![Known Issue](./images/knownissue.png)
 
